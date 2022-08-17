@@ -48,4 +48,11 @@ services:
     arguments:
       $hasAccessFunction: '@hallo_verden.access_definitions.expression_functions.has_access'
 
+  hallo_verden.access_definitions.event_listener.access_definable:
+    class: HalloVerden\AccessDefinitionsBundle\EventListener\AccessDefinableListener
+    arguments:
+      $accessDefinitionFilterService: '@hallo_verden.access_definitions.service.filter'
+    tags:
+      - { name: kernel.event_subscriber }
+
   HalloVerden\AccessDefinitionsBundle\Interfaces\AccessDefinitionServiceInterface: '@hallo_verden.access_definitions.service'
