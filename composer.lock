@@ -476,16 +476,16 @@
         },
         {
             "name": "halloverden/symfony-jwt-authenticator-bundle",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/halloverden/symfony-jwt-authenticator-bundle.git",
-                "reference": "a69414e437ac0526a668e852553dfcba0a924523"
+                "reference": "d00a289243642a820d015cba1c217d2201302489"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/halloverden/symfony-jwt-authenticator-bundle/zipball/a69414e437ac0526a668e852553dfcba0a924523",
-                "reference": "a69414e437ac0526a668e852553dfcba0a924523",
+                "url": "https://api.github.com/repos/halloverden/symfony-jwt-authenticator-bundle/zipball/d00a289243642a820d015cba1c217d2201302489",
+                "reference": "d00a289243642a820d015cba1c217d2201302489",
                 "shasum": ""
             },
             "require": {
@@ -522,9 +522,9 @@
             "description": "JWT authenticator for Symfony",
             "support": {
                 "issues": "https://github.com/halloverden/symfony-jwt-authenticator-bundle/issues",
-                "source": "https://github.com/halloverden/symfony-jwt-authenticator-bundle/tree/1.0.0"
+                "source": "https://github.com/halloverden/symfony-jwt-authenticator-bundle/tree/1.0.1"
             },
-            "time": "2022-08-10T13:37:19+00:00"
+            "time": "2022-08-15T16:16:25+00:00"
         },
         {
             "name": "halloverden/symfony-voter-bundle",
