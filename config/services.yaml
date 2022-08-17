@@ -37,4 +37,15 @@ services:
     tags:
       - { name: validator.constraint_validator }
 
+  hallo_verden.access_definitions.expression_functions.has_access:
+    class: HalloVerden\AccessDefinitionsBundle\Jms\ExpressionLanguage\ExpressionFunction\HasAccessFunction
+    arguments:
+      $accessDefinitionService: '@hallo_verden.access_definitions.service'
+      $tokenStorage: '@security.token_storage'
+
+  hallo_verden.access_definitions.expression_function_provider:
+    class: HalloVerden\AccessDefinitionsBundle\Jms\ExpressionLanguage\AccessDefinitionExpressionLanguageProvider
+    arguments:
+      $hasAccessFunction: '@hallo_verden.access_definitions.expression_functions.has_access'
+
   HalloVerden\AccessDefinitionsBundle\Interfaces\AccessDefinitionServiceInterface: '@hallo_verden.access_definitions.service'
