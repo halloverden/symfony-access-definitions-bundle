@@ -1,0 +1,58 @@
+services:
+  hallo_verden.access_definitions.service:
+    class: HalloVerden\AccessDefinitionsBundle\Services\AccessDefinitionService
+    arguments:
+      $metadataFactory: '@hallo_verden.access_definitions.metadata.factory'
+      $accessDeciderService: '@hallo_verden.access_definitions.service.access_decider'
+
+  hallo_verden.access_definitions.service.access_decider:
+    class: HalloVerden\AccessDefinitionsBundle\Services\AccessDefinitionAccessDeciderService
+    arguments:
+      $security: '@hallo_verden_voter.security'
+
+  hallo_verden.access_definitions.service.filter:
+    class: HalloVerden\AccessDefinitionsBundle\Services\AccessDefinitionFilterService
+    arguments:
+      $accessDefinitionService: '@hallo_verden.access_definitions.service'
+
+  hallo_verden.access_definitions.metadata.factory:
+    class: Metadata\MetadataFactory
+    arguments:
+      $driver: '@hallo_verden.access_definitions.metadata.driver.yaml'
+
+  hallo_verden.access_definitions.metadata.file_locator:
+    class: Metadata\Driver\FileLocator
+    arguments:
+      $dirs: []
+
+  hallo_verden.access_definitions.metadata.driver.yaml:
+    class: HalloVerden\AccessDefinitionsBundle\Metadata\Drivers\AccessDefinitionYamlDriver
+    arguments:
+      $locator: '@hallo_verden.access_definitions.metadata.file_locator'
+
+  hallo_verden.access_definitions.constraints.has_access:
+    class: HalloVerden\AccessDefinitionsBundle\Constraints\HasAccessValidator
+    arguments:
+      $accessDefinitionService: '@hallo_verden.access_definitions.service'
+    tags:
+      - { name: validator.constraint_validator }
+
+  hallo_verden.access_definitions.expression_functions.has_access:
+    class: HalloVerden\AccessDefinitionsBundle\Jms\ExpressionLanguage\ExpressionFunction\HasAccessFunction
+    arguments:
+      $accessDefinitionService: '@hallo_verden.access_definitions.service'
+      $tokenStorage: '@security.token_storage'
+
+  hallo_verden.access_definitions.expression_function_provider:
+    class: HalloVerden\AccessDefinitionsBundle\Jms\ExpressionLanguage\AccessDefinitionExpressionLanguageProvider
+    arguments:
+      $hasAccessFunction: '@hallo_verden.access_definitions.expression_functions.has_access'
+
+  hallo_verden.access_definitions.event_listener.access_definable:
+    class: HalloVerden\AccessDefinitionsBundle\EventListener\AccessDefinableListener
+    arguments:
+      $accessDefinitionFilterService: '@hallo_verden.access_definitions.service.filter'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  HalloVerden\AccessDefinitionsBundle\Interfaces\AccessDefinitionServiceInterface: '@hallo_verden.access_definitions.service'
