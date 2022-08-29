@@ -46,19 +46,21 @@ class AccessDefinitionAccessDeciderService implements AccessDefinitionAccessDeci
       return true;
     }
 
-    if ($this->shouldCheckScope()) {
-      return $metadata->scopes !== null && $this->security->isGranted(OauthAuthorizationVoter::OAUTH_SCOPE, $metadata->scopes);
+    if ($this->shouldCheckScope($metadata)) {
+      return $this->security->isGranted(OauthAuthorizationVoter::OAUTH_SCOPE, $metadata->scopes);
     }
 
     return null !== $metadata->roles && $this->security->isGrantedEitherOf($metadata->roles);
   }
 
   /**
+   * @param AccessDefinitionMetadata $metadata
+   *
    * @return bool
    */
-  private function shouldCheckScope(): bool {
+  private function shouldCheckScope(AccessDefinitionMetadata $metadata): bool {
     $token = $this->security->getToken();
-    return $token instanceof JwtPostAuthenticationToken && null !== $token->getJwt()->getClaim('scope');
+    return !empty($metadata->scopes) && $token instanceof JwtPostAuthenticationToken && null !== $token->getJwt()->getClaim('scope');
   }
 
 }
