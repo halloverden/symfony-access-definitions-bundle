@@ -46,8 +46,8 @@ class AccessDefinitionAccessDeciderService implements AccessDefinitionAccessDeci
       return true;
     }
 
-    if ($this->shouldCheckScope($metadata)) {
-      return $this->security->isGranted(OauthAuthorizationVoter::OAUTH_SCOPE, $metadata->scopes);
+    if ($this->shouldCheckScope($metadata) && !$this->security->isGranted(OauthAuthorizationVoter::OAUTH_SCOPE, $metadata->scopes)) {
+      return false;
     }
 
     return null !== $metadata->roles && $this->security->isGrantedEitherOf($metadata->roles);
