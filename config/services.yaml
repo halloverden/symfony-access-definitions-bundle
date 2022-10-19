@@ -8,7 +8,8 @@ services:
   hallo_verden.access_definitions.service.access_decider:
     class: HalloVerden\AccessDefinitionsBundle\Services\AccessDefinitionAccessDeciderService
     arguments:
-      $security: '@hallo_verden_voter.security'
+      $defaultStrategy: !php/const HalloVerden\AccessDefinitionsBundle\Strategy\UnanimousStrategy::NAME
+      $strategies: !tagged_iterator { tag: 'hallo_verden.access_definitions.strategy', index_by: 'key' }
 
   hallo_verden.access_definitions.service.filter:
     class: HalloVerden\AccessDefinitionsBundle\Services\AccessDefinitionFilterService
@@ -56,3 +57,41 @@ services:
       - { name: kernel.event_subscriber }
 
   HalloVerden\AccessDefinitionsBundle\Interfaces\AccessDefinitionServiceInterface: '@hallo_verden.access_definitions.service'
+
+  hallo_verden.access_definitions.metadata_checker.method:
+    class: HalloVerden\AccessDefinitionsBundle\Checker\MethodChecker
+    tags:
+      - { name: 'hallo_verden.access_definitions.metadata_checker' }
+
+  hallo_verden.access_definitions.metadata_checker.expression:
+    class: HalloVerden\AccessDefinitionsBundle\Checker\ExpressionChecker
+    tags:
+      - { name: 'hallo_verden.access_definitions.metadata_checker' }
+
+  hallo_verden.access_definitions.metadata_checker.scope:
+    class: HalloVerden\AccessDefinitionsBundle\Checker\ScopeChecker
+    arguments:
+      $security: '@hallo_verden_voter.security'
+    tags:
+      - { name: 'hallo_verden.access_definitions.metadata_checker' }
+
+  hallo_verden.access_definitions.metadata_checker.role:
+    class: HalloVerden\AccessDefinitionsBundle\Checker\RoleChecker
+    arguments:
+      $security: '@hallo_verden_voter.security'
+    tags:
+      - { name: 'hallo_verden.access_definitions.metadata_checker' }
+
+  hallo_verden.access_definitions.strategy.affirmative:
+    class: HalloVerden\AccessDefinitionsBundle\Strategy\AffirmativeStrategy
+    arguments:
+      $metadataCheckers: !tagged_iterator { tag: 'hallo_verden.access_definitions.metadata_checker' }
+    tags:
+      - { name: 'hallo_verden.access_definitions.strategy', key: !php/const HalloVerden\AccessDefinitionsBundle\Strategy\AffirmativeStrategy::NAME }
+
+  hallo_verden.access_definitions.strategy.unanimous:
+    class: HalloVerden\AccessDefinitionsBundle\Strategy\UnanimousStrategy
+    arguments:
+      $metadataCheckers: !tagged_iterator { tag: 'hallo_verden.access_definitions.metadata_checker' }
+    tags:
+      - { name: 'hallo_verden.access_definitions.strategy', key: !php/const HalloVerden\AccessDefinitionsBundle\Strategy\UnanimousStrategy::NAME }

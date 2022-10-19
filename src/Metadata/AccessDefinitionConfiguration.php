@@ -83,7 +83,8 @@ class AccessDefinitionConfiguration implements ConfigurationInterface {
         ->scalarPrototype()->end()
       ->end()
       ->scalarNode('method')->end()
-      ->scalarNode('expression')->end();
+      ->scalarNode('expression')->end()
+      ->scalarNode('strategy')->end();
   }
 
 }
