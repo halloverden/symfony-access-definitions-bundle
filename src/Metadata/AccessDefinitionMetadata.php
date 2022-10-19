@@ -22,6 +22,7 @@ class AccessDefinitionMetadata {
 
   public ?string $method = null;
   public ?string $expression = null;
+  public ?string $strategy = null;
 
   /**
    * @param array $data
