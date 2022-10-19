@@ -8,6 +8,11 @@
             "HalloVerden\\AccessDefinitionsBundle\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "HalloVerden\\AccessDefinitionsBundle\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Tom Roar Furunes",
@@ -25,6 +30,10 @@
         "symfony/expression-language": "^5.4|^6.0",
         "halloverden/symfony-jwt-authenticator-bundle": "^1.0",
         "jms/serializer": "^3.18",
-        "symfony/validator": "^5.4|^6.0"
+        "symfony/validator": "^5.4|^6.0",
+        "halloverden/symfony-oidc-contracts": "^2.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.4|^6.1"
     }
 }
