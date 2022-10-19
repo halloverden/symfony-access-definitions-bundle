@@ -29,6 +29,9 @@ class HalloVerdenAccessDefinitionsExtension extends Extension {
     if ($mergedConfig['cache'] !== 'none') {
       $this->addCache($mergedConfig, $container);
     }
+
+    $decider = $container->getDefinition('hallo_verden.access_definitions.service.access_decider');
+    $decider->setArgument('$defaultStrategy', $mergedConfig['default_strategy']);
   }
 
   /**
