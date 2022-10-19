@@ -4,12 +4,10 @@
 namespace HalloVerden\AccessDefinitionsBundle\Services;
 
 
-use HalloVerden\JwtAuthenticatorBundle\Security\Authenticator\Token\JwtPostAuthenticationToken;
 use HalloVerden\AccessDefinitionsBundle\Interfaces\AccessDefinitionAccessDeciderServiceInterface;
 use HalloVerden\AccessDefinitionsBundle\Metadata\AccessDefinitionMetadata;
-use HalloVerden\VoterBundle\Security\SecurityInterface;
-use HalloVerden\VoterBundle\Security\Voter\OauthAuthorizationVoter;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use HalloVerden\AccessDefinitionsBundle\Strategy\AffirmativeStrategy;
+use HalloVerden\AccessDefinitionsBundle\Strategy\StrategyInterface;
 
 /**
  * Class AccessDefinitionAccessDeciderService
@@ -17,15 +15,18 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  * @package HalloVerden\AccessDefinitionsBundle\Services
  */
 class AccessDefinitionAccessDeciderService implements AccessDefinitionAccessDeciderServiceInterface {
-  private readonly SecurityInterface $security;
-  private readonly ExpressionLanguage $expressionLanguage;
+  private readonly StrategyInterface $defaultStrategy;
+  private readonly array $strategies;
 
   /**
    * AccessDefinitionAccessDeciderService constructor.
    */
-  public function __construct(SecurityInterface $security, ?ExpressionLanguage $expressionLanguage = null) {
-    $this->security = $security;
-    $this->expressionLanguage = $expressionLanguage ?: new ExpressionLanguage();
+  public function __construct(
+    iterable $strategies,
+    string $defaultStrategy = AffirmativeStrategy::NAME,
+  ) {
+    $this->strategies = $strategies instanceof \Traversable ? \iterator_to_array($strategies) : (array) $strategies;
+    $this->defaultStrategy = $this->strategies[$defaultStrategy] ?? throw new \LogicException(\sprintf('Strategy %s is not defined', $defaultStrategy));
   }
 
   /**
@@ -33,34 +34,24 @@ class AccessDefinitionAccessDeciderService implements AccessDefinitionAccessDeci
    */
   public function hasAccessDefinedAccess(?AccessDefinitionMetadata $metadata): bool {
     // Nothing specified = access NOT granted.
-    if (null === $metadata || (null === $metadata->method && null === $metadata->scopes && null === $metadata->roles && null === $metadata->expression)) {
+    if (null === $metadata) {
       return false;
     }
 
-    // If a method is defined, this takes precedence if true.
-    if (null !== $metadata->method && is_callable($metadata->method) && ($metadata->method)($metadata)) {
-      return true;
-    }
-
-    if (null !== $metadata->expression && $this->expressionLanguage->evaluate($metadata->expression, ['metadata' => $metadata])) {
-      return true;
-    }
-
-    if ($this->shouldCheckScope($metadata)) {
-      return $this->security->isGranted(OauthAuthorizationVoter::OAUTH_SCOPE, $metadata->scopes);
-    }
-
-    return null !== $metadata->roles && $this->security->isGrantedEitherOf($metadata->roles);
+    return $this->getStrategy($metadata)->hasAccessDefinedAccess($metadata);
   }
 
   /**
    * @param AccessDefinitionMetadata $metadata
    *
-   * @return bool
+   * @return StrategyInterface
    */
-  private function shouldCheckScope(AccessDefinitionMetadata $metadata): bool {
-    $token = $this->security->getToken();
-    return !empty($metadata->scopes) && $token instanceof JwtPostAuthenticationToken && null !== $token->getJwt()->getClaim('scope');
+  private function getStrategy(AccessDefinitionMetadata $metadata): StrategyInterface {
+    if (null !== $metadata->strategy) {
+      return $this->strategies[$metadata->strategy];
+    }
+
+    return $this->defaultStrategy;
   }
 
 }
