@@ -3,7 +3,7 @@
 namespace HalloVerden\AccessDefinitionsBundle\Checker;
 
 use HalloVerden\AccessDefinitionsBundle\Metadata\AccessDefinitionMetadata;
-use HalloVerden\JwtAuthenticatorBundle\Security\Authenticator\Token\JwtPostAuthenticationToken;
+use HalloVerden\JwtAuthenticatorBundle\Security\JwtPostAuthenticationToken;
 use HalloVerden\VoterBundle\Security\SecurityInterface;
 use HalloVerden\VoterBundle\Security\Voter\OauthAuthorizationVoter;
 

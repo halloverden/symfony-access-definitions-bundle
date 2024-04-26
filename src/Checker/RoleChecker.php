@@ -4,7 +4,7 @@ namespace HalloVerden\AccessDefinitionsBundle\Checker;
 
 use HalloVerden\AccessDefinitionsBundle\Metadata\AccessDefinitionMetadata;
 use HalloVerden\Contracts\Oidc\Tokens\OidcTokenInterface;
-use HalloVerden\JwtAuthenticatorBundle\Security\Authenticator\Token\JwtPostAuthenticationToken;
+use HalloVerden\JwtAuthenticatorBundle\Security\JwtPostAuthenticationToken;
 use HalloVerden\VoterBundle\Security\SecurityInterface;
 
 final class RoleChecker implements MetadataCheckerInterface {
