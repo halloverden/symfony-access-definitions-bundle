@@ -26,7 +26,7 @@
         "symfony/framework-bundle": "^5.4|^6.0",
         "jms/metadata": "^2.6",
         "symfony/yaml": "^5.4|^6.0",
-        "halloverden/symfony-voter-bundle": "^2.1",
+        "halloverden/symfony-voter-bundle": "^2.1|^3.0",
         "symfony/expression-language": "^5.4|^6.0",
         "halloverden/symfony-jwt-authenticator-bundle": "^2.1",
         "jms/serializer": "^3.18",
